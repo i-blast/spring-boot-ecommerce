@@ -9,6 +9,7 @@ import com.luv2code.ecommerce.entity.OrderItem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,6 +37,11 @@ public class CheckoutServiceImpl implements CheckoutService {
         order.setBillingAddress(purchase.getBillingAddress());
 
         Customer customer = purchase.getCustomer();
+        Customer customerFromDB = customerRepository.findByEmail(customer.getEmail());
+        if (Objects.nonNull(customerFromDB)) {
+            customer = customerFromDB;
+        }
+
         customer.add(order);
         customerRepository.save(customer);
 
